@@ -1,0 +1,26 @@
+version: '3.4'
+services:
+  server:
+    image: excel-filter-server
+    build:
+      context: ./api
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./api:/usr/server
+      - /usr/server/node_modules
+    environment:
+      - NODE_ENV=development
+    ports:
+      - 3000:3000
+    command: npm run dev
+  client:
+    image: excel-filter-client
+    build:
+      context: ./client
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./client:/usr/client
+      # - /usr/client/node_modules
+    ports:
+      - 3001:3000
+    command: bash -c "npm run start"
