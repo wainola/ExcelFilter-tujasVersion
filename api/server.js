@@ -15,13 +15,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const storage = multer.diskStorage({
   destination: `${process.cwd()}/reports`,
   filename(req, file, cb) {
-    cb(null, `${moment().format()}`);
+    cb(null, `${moment().format()}.xlsx`);
   }
 });
 
 const upload = multer({ storage });
 
-app.get('/process-data', DataHanlder.processData);
+// app.get('/process-data', DataHanlder.processData);
 app.post('/file', upload.single('file'), DataHanlder.submitData);
 
 app.listen(port, err => {

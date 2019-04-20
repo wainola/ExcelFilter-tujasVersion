@@ -1,4 +1,6 @@
 const readXLSFile = require('read-excel-file/node');
+const xl = require('excel4node');
+const moment = require('moment');
 
 /**
  * FILTERT CONTENT:
@@ -59,12 +61,55 @@ const filterCells = async data => {
   return filterCellsData;
 };
 
+const writeNewExcel = async data => {
+  console.log('writingreport', data.length);
+
+  const wb = new xl.Workbook();
+
+  const ws = wb.addWorksheet('Sheet 1');
+
+  // const cellsToStyle = data.length + 1;
+
+  // Array.from(Array(cellsToStyle).keys(), n => n).forEach(item => ws.cell())
+
+  data.forEach((item, idx) => {
+    console.log('item', item);
+    item.forEach((e, index) => {
+      console.log('element::', e);
+      if (typeof e === 'string') {
+        console.log('string');
+        ws.cell(idx + 1, index + 1).string(e);
+      }
+      if (typeof e === 'number') {
+        console.log('number');
+        ws.cell(idx + 1, index + 1).number(e);
+      }
+      if (typeof e === 'object') {
+        console.log('object');
+        ws.cell(idx + 1, index + 1).date(moment(e).format());
+      }
+    });
+  });
+
+  wb.write(`${process.cwd()}/reports/report-procesado.xlsx`, (err, stats) => {
+    if (err) {
+      console.log(err);
+      return {};
+    }
+    console.log(stats);
+    return {};
+  });
+};
+
 async function Reader(filePath) {
   let fileContents;
   try {
     fileContents = await readXLSFile(filePath);
 
     const filterCellsResults = await filterCells(fileContents);
+    const report = await writeNewExcel(filterCellsResults);
+
+    console.log('writing report', report);
 
     return filterCellsResults;
   } catch (err) {
