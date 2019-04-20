@@ -4,6 +4,8 @@
 .env.development
 .env.production
 
+/api/reports
+
 ### Linux ###
 *~
 

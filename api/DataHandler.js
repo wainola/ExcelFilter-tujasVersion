@@ -18,7 +18,11 @@ class DataHandler {
       .then(dataRead => response.send(dataRead));
   }
 
-  static async submitData(request, response) {}
+  static async submitData(request, response) {
+    console.log('POSTDATA', request.file);
+    const { filename, path } = request.file;
+    return response.status(200).send({ filename, path });
+  }
 }
 
 module.exports = DataHandler;

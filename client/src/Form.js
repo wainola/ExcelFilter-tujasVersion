@@ -3,6 +3,8 @@ import { Card, Form, FormGroup, Input, Button } from 'reactstrap';
 
 const CustomForm = () => {
   const [fileData, setFile] = useState({});
+  const [sendData, setSendData] = useState(false);
+  const [data, setData] = useState(null);
 
   function handleChange(evt) {
     let data = new FormData();
@@ -18,17 +20,22 @@ const CustomForm = () => {
     let data = new FormData();
     data.append('file', fileData.file);
     data.append('name', fileData.name);
+    setSendData(!sendData);
+    setData(data);
   }
 
   useEffect(() => {
-    if (!!Object.keys(fileData)) {
-      fetch('http://localhost:3000/process-data')
+    if (!!Object.keys(fileData).length) {
+      fetch('http://localhost:3000/file', {
+        method: 'POST',
+        body: data
+      })
         .then(response => response.json())
         .then(d => console.log('d:', d));
     }
-  }, [fileData]);
+  }, [sendData]);
 
-  console.log(fileData);
+  console.log(Object.keys(fileData));
   return (
     <Card>
       <Form onSubmit={handleSubmit}>
