@@ -48,6 +48,7 @@ const filterCells = async data => {
         }
       })
       .map(elem => {
+        // console.log('map elem', elem);
         if (elem === null) {
           return 'Campo sin llenar';
         }
@@ -62,42 +63,37 @@ const filterCells = async data => {
 };
 
 const writeNewExcel = async data => {
-  console.log('writingreport', data.length);
-
   const wb = new xl.Workbook();
 
   const ws = wb.addWorksheet('Sheet 1');
 
-  // const cellsToStyle = data.length + 1;
+  const cellsToStyle = data.length + 1;
 
-  // Array.from(Array(cellsToStyle).keys(), n => n).forEach(item => ws.cell())
+  Array.from(Array(cellsToStyle).keys(), n => n).forEach(item => ws.cell());
 
   data.forEach((item, idx) => {
-    console.log('item', item);
     item.forEach((e, index) => {
-      console.log('element::', e);
       if (typeof e === 'string') {
-        console.log('string');
         ws.cell(idx + 1, index + 1).string(e);
       }
       if (typeof e === 'number') {
-        console.log('number');
         ws.cell(idx + 1, index + 1).number(e);
       }
       if (typeof e === 'object') {
-        console.log('object');
         ws.cell(idx + 1, index + 1).date(moment(e).format());
       }
     });
   });
 
-  wb.write(`${process.cwd()}/reports/report-procesado.xlsx`, (err, stats) => {
-    if (err) {
-      console.log(err);
-      return {};
-    }
-    console.log(stats);
-    return {};
+  return new Promise((resolve, reject) => {
+    wb.write(`${process.cwd()}/reports/report-procesado.xlsx`, (err, stats) => {
+      if (err) {
+        console.log('error:', err);
+        return reject(err);
+      }
+      console.log('stats', stats);
+      return resolve(stats);
+    });
   });
 };
 
@@ -107,11 +103,9 @@ async function Reader(filePath) {
     fileContents = await readXLSFile(filePath);
 
     const filterCellsResults = await filterCells(fileContents);
-    const report = await writeNewExcel(filterCellsResults);
+    const generatedReport = await writeNewExcel(filterCellsResults);
 
-    console.log('writing report', report);
-
-    return filterCellsResults;
+    return generatedReport;
   } catch (err) {
     return { error: true, meta: err };
   }
