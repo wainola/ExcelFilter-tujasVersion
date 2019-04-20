@@ -51,16 +51,22 @@ const CustomForm = () => {
   return dataProcessed !== null ? (
     <CustomTable data={dataProcessed} />
   ) : !isLoading ? (
-    <Form onSubmit={handleSubmit} className="custom-form">
-      <FormGroup>
+    <Form onSubmit={handleSubmit} className="custom-form d-flex flex-column">
+      <h3>Cargue datos</h3>
+      <FormGroup className="d-flex justify-content-center">
         <Input type="file" onChange={handleChange} />
-        <Button color="success" type="submit" onSubmit={handleSubmit}>
+      </FormGroup>
+      <FormGroup className="d-flex justify-content-center">
+        <Button className="custom-button" color="success" type="submit" onSubmit={handleSubmit}>
           Enviar!
         </Button>
       </FormGroup>
     </Form>
   ) : (
-    <Spinner style={{ width: '3rem', height: '3rem' }} type="grow" color="danger" />
+    <div className="custom-spinner">
+      <Spinner style={{ width: '3rem', height: '3rem' }} type="grow" color="danger" />
+      <p>Cargando...</p>
+    </div>
   );
 };
 
