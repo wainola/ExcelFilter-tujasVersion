@@ -39,9 +39,10 @@ const CustomForm = () => {
             setIsLoading(false);
             console.log('d:::', data);
             const {
-              meta: { filteredData }
+              meta: { filteredData },
+              path
             } = data;
-            setDataProcessed(filteredData);
+            setDataProcessed({ filterData: filteredData, path });
           }
         });
     }

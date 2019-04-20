@@ -2,12 +2,23 @@ import React from 'react';
 import { Container, Row, Col, Table, Button } from 'reactstrap';
 
 const CustomTable = ({ data }) => {
-  console.log('data::', data);
-  const headers = data[0];
-  const rest = data.filter((_, idx) => idx !== 0);
+  console.log('data::', data.filterData, data.path);
+  const headers = data.filterData[0];
+  const rest = data.filterData.filter((_, idx) => idx !== 0);
 
   function handleClick(evt) {
-    evt.preventDEfault();
+    evt.preventDefault();
+    fetch(data.path)
+      .then(data => data.blob())
+      .then(response => {
+        console.log('response::', response);
+        const url = window.URL.createObjectURL(response);
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'report.xlsx');
+        document.body.appendChild(link);
+        link.click();
+      });
   }
 
   console.log('rest', rest);
@@ -38,7 +49,7 @@ const CustomTable = ({ data }) => {
         </Col>
       </Row>
       <Row>
-        <Col>
+        <Col className="d-flex justify-content-center">
           <Button color="info" type="button" onClick={handleClick}>
             Descargar nuevo archivo
           </Button>
