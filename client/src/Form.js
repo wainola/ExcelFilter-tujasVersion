@@ -26,22 +26,16 @@ const CustomForm = () => {
 
   useEffect(() => {
     if (!!Object.keys(fileData).length) {
+      setIsLoading(!isLoading);
       fetch('http://localhost:3000/file', {
         method: 'POST',
         body: data
       })
-        .then(r => {
-          setIsLoading(!isLoading);
-          return r;
-        })
         .then(response => response.json())
         .then(data => data)
         .then(d => {
           if (!!Object.keys(d.meta).length) {
-            console.log(isLoading);
-            setTimeout(() => {
-              setIsLoading(false);
-            }, 2000);
+            setIsLoading(false);
           }
         });
     }
