@@ -10,7 +10,8 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get('/process-data', DataHanlder);
+app.get('/process-data', DataHanlder.processData);
+app.post('/file', DataHanlder.submitData);
 
 app.listen(port, err => {
   if (err) {
