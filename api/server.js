@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -6,7 +7,7 @@ const moment = require('moment');
 const DataHanlder = require('./DataHandler');
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT;
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -25,6 +26,8 @@ const upload = multer({ storage });
 app.post('/file', upload.single('file'), DataHanlder.submitData);
 
 app.post('/get-report', DataHanlder.downloadFile);
+
+app.get('/test', (request, response) => response.status(200).send('Im alive!'));
 
 app.listen(port, err => {
   if (err) {

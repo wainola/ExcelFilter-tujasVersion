@@ -1,6 +1,8 @@
 import React from 'react';
 import { Container, Row, Col, Table, Button } from 'reactstrap';
 
+const { REACT_APP_BACKEND_URL } = process.env;
+
 const CustomTable = ({ data, resetApp }) => {
   console.log('data::', data);
   const headers = data.filterData[0];
@@ -9,7 +11,7 @@ const CustomTable = ({ data, resetApp }) => {
   function handleClick(evt) {
     evt.preventDefault();
     console.log('data', data);
-    fetch('http://localhost:3000/get-report', {
+    fetch(`${REACT_APP_BACKEND_URL}/get-report`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',

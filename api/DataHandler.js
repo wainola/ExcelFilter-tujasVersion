@@ -7,7 +7,6 @@ class DataHandler {
   }
 
   static async submitData(request, response) {
-    console.log('POSTDATA', request.file);
     const { filename, path } = request.file;
     try {
       const filePath = `${process.cwd()}/reports/${filename}`;
@@ -20,12 +19,9 @@ class DataHandler {
   }
 
   static async downloadFile(request, response) {
-    console.log('body::::', request);
     const { body } = request;
 
     const { path } = body;
-
-    console.log('body', body);
 
     return response.download(path);
   }

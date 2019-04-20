@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Form, FormGroup, Input, Button, Spinner } from 'reactstrap';
+import { Form, FormGroup, Input, Button, Spinner } from 'reactstrap';
 import CustomTable from './CustomTable';
+
+const { REACT_APP_BACKEND_URL } = process.env;
 
 const CustomForm = () => {
   const [fileData, setFile] = useState({});
@@ -33,7 +35,7 @@ const CustomForm = () => {
   useEffect(() => {
     if (!!Object.keys(fileData).length) {
       setIsLoading(!isLoading);
-      fetch('http://localhost:3000/file', {
+      fetch(`${REACT_APP_BACKEND_URL}/file`, {
         method: 'POST',
         body: data
       })

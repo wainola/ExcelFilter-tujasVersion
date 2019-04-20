@@ -12,6 +12,7 @@
   "dependencies": {
     "body-parser": "^1.18.3",
     "cors": "^2.8.5",
+    "dotenv": "^7.0.0",
     "excel4node": "^1.7.1",
     "express": "^4.16.4",
     "moment": "^2.24.0",
