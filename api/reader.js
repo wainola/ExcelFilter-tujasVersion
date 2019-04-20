@@ -105,7 +105,7 @@ async function Reader(filePath) {
     const filterCellsResults = await filterCells(fileContents);
     const generatedReport = await writeNewExcel(filterCellsResults);
 
-    return generatedReport;
+    return { filteredData: filterCellsResults, reportCreated: generatedReport };
   } catch (err) {
     return { error: true, meta: err };
   }

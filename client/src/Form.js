@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Form, FormGroup, Input, Button, Spinner } from 'reactstrap';
+import CustomTable from './CustomTable';
 
 const CustomForm = () => {
   const [fileData, setFile] = useState({});
   const [sendData, setSendData] = useState(false);
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [dataProcessed, setDataProcessed] = useState(null);
 
   function handleChange(evt) {
     console.log('file', evt.target.files);
@@ -32,31 +34,33 @@ const CustomForm = () => {
         body: data
       })
         .then(response => response.json())
-        .then(data => data)
-        .then(d => {
-          if (!!Object.keys(d.meta).length) {
+        .then(data => {
+          if (!!Object.keys(data.meta).length) {
             setIsLoading(false);
+            console.log('d:::', data);
+            const {
+              meta: { filteredData }
+            } = data;
+            setDataProcessed(filteredData);
           }
         });
     }
   }, [sendData]);
 
   console.log(Object.keys(fileData));
-  return (
-    <Card>
-      {!isLoading ? (
-        <Form onSubmit={handleSubmit}>
-          <FormGroup>
-            <Input type="file" onChange={handleChange} />
-            <Button color="success" type="submit" onSubmit={handleSubmit}>
-              Enviar!
-            </Button>
-          </FormGroup>
-        </Form>
-      ) : (
-        <Spinner style={{ width: '3rem', height: '3rem' }} type="grow" color="danger" />
-      )}
-    </Card>
+  return dataProcessed !== null ? (
+    <CustomTable data={dataProcessed} />
+  ) : !isLoading ? (
+    <Form onSubmit={handleSubmit} className="custom-form">
+      <FormGroup>
+        <Input type="file" onChange={handleChange} />
+        <Button color="success" type="submit" onSubmit={handleSubmit}>
+          Enviar!
+        </Button>
+      </FormGroup>
+    </Form>
+  ) : (
+    <Spinner style={{ width: '3rem', height: '3rem' }} type="grow" color="danger" />
   );
 };
 
