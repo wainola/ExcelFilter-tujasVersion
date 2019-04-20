@@ -26,6 +26,10 @@ const CustomForm = () => {
     setData(data);
   }
 
+  function resetApp() {
+    setDataProcessed(null);
+  }
+
   useEffect(() => {
     if (!!Object.keys(fileData).length) {
       setIsLoading(!isLoading);
@@ -35,14 +39,16 @@ const CustomForm = () => {
       })
         .then(response => response.json())
         .then(data => {
-          if (!!Object.keys(data.meta).length) {
+          if (!!Object.keys(data.meta.filteredData).length) {
             setIsLoading(false);
             console.log('d:::', data);
             const {
-              meta: { filteredData },
-              path
+              meta: {
+                filteredData,
+                reportCreated: { fileRoute }
+              }
             } = data;
-            setDataProcessed({ filterData: filteredData, path });
+            setDataProcessed({ filterData: filteredData, fileRoute });
           }
         });
     }
@@ -50,7 +56,7 @@ const CustomForm = () => {
 
   console.log(Object.keys(fileData));
   return dataProcessed !== null ? (
-    <CustomTable data={dataProcessed} />
+    <CustomTable data={dataProcessed} resetApp={resetApp} />
   ) : !isLoading ? (
     <Form onSubmit={handleSubmit} className="custom-form d-flex flex-column">
       <h3>Cargue datos</h3>

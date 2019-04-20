@@ -86,13 +86,14 @@ const writeNewExcel = async data => {
   });
 
   return new Promise((resolve, reject) => {
-    wb.write(`${process.cwd()}/reports/report-procesado.xlsx`, (err, stats) => {
+    const fileRoute = `${process.cwd()}/reports/report-procesado.xlsx`;
+    wb.write(`${fileRoute}`, (err, stats) => {
       if (err) {
         console.log('error:', err);
         return reject(err);
       }
       console.log('stats', stats);
-      return resolve(stats);
+      return resolve({ stats, fileRoute });
     });
   });
 };

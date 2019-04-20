@@ -1,24 +1,32 @@
 import React from 'react';
 import { Container, Row, Col, Table, Button } from 'reactstrap';
 
-const CustomTable = ({ data }) => {
-  console.log('data::', data.filterData, data.path);
+const CustomTable = ({ data, resetApp }) => {
+  console.log('data::', data);
   const headers = data.filterData[0];
   const rest = data.filterData.filter((_, idx) => idx !== 0);
 
   function handleClick(evt) {
     evt.preventDefault();
-    fetch(data.path)
-      .then(data => data.blob())
-      .then(response => {
-        console.log('response::', response);
-        const url = window.URL.createObjectURL(response);
+    console.log('data', data);
+    fetch('http://localhost:3000/get-report', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ path: data.fileRoute })
+    })
+      .then(response => response.blob())
+      .then(file => {
+        const url = window.URL.createObjectURL(new Blob([file]));
         const link = document.createElement('a');
         link.href = url;
         link.setAttribute('download', 'report.xlsx');
         document.body.appendChild(link);
         link.click();
-      });
+      })
+      .then(() => resetApp());
   }
 
   console.log('rest', rest);

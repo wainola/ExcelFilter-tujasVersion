@@ -24,6 +24,8 @@ const upload = multer({ storage });
 // app.get('/process-data', DataHanlder.processData);
 app.post('/file', upload.single('file'), DataHanlder.submitData);
 
+app.post('/get-report', DataHanlder.downloadFile);
+
 app.listen(port, err => {
   if (err) {
     console.error('Server terminated');
