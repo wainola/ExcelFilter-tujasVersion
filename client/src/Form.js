@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Form, FormGroup, Input, Button } from 'reactstrap';
+import { Card, Form, FormGroup, Input, Button, Spinner } from 'reactstrap';
 
 const CustomForm = () => {
   const [fileData, setFile] = useState({});
   const [sendData, setSendData] = useState(false);
   const [data, setData] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   function handleChange(evt) {
-    let data = new FormData();
     console.log('file', evt.target.files);
     setFile({
       file: evt.target.files[0],
@@ -30,22 +30,38 @@ const CustomForm = () => {
         method: 'POST',
         body: data
       })
+        .then(r => {
+          setIsLoading(!isLoading);
+          return r;
+        })
         .then(response => response.json())
-        .then(d => console.log('d:', d));
+        .then(data => data)
+        .then(d => {
+          if (!!Object.keys(d.meta).length) {
+            console.log(isLoading);
+            setTimeout(() => {
+              setIsLoading(false);
+            }, 2000);
+          }
+        });
     }
   }, [sendData]);
 
   console.log(Object.keys(fileData));
   return (
     <Card>
-      <Form onSubmit={handleSubmit}>
-        <FormGroup>
-          <Input type="file" onChange={handleChange} />
-          <Button color="success" type="submit" onSubmit={handleSubmit}>
-            Enviar!
-          </Button>
-        </FormGroup>
-      </Form>
+      {!isLoading ? (
+        <Form onSubmit={handleSubmit}>
+          <FormGroup>
+            <Input type="file" onChange={handleChange} />
+            <Button color="success" type="submit" onSubmit={handleSubmit}>
+              Enviar!
+            </Button>
+          </FormGroup>
+        </Form>
+      ) : (
+        <Spinner style={{ width: '3rem', height: '3rem' }} type="grow" color="danger" />
+      )}
     </Card>
   );
 };
